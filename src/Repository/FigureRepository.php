@@ -2,7 +2,7 @@
 
 namespace Suminagashi\FiguresBundle\Repository;
 
-use Suminagashi\FiguresBundle\Figure;
+use Suminagashi\FiguresBundle\Entity\Figure;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -36,17 +36,6 @@ class FigureRepository extends ServiceEntityRepository
     }
     */
 
-
-    public function findByKey($key): ?Figure
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.key = :key')
-            ->setParameter('key', $key)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-
     public function findAllAsArray()
     {
         return $this->createQueryBuilder('s')
@@ -55,23 +44,29 @@ class FigureRepository extends ServiceEntityRepository
         ;
     }
 
-    public function getCumulRange($range)
+    public function getAll($key)
     {
-        return $range;
+        return $this->createQueryBuilder('f')
+        ->where('f.key = :key')
+        ->setParameter('key', $key)
+        ->select('SUM(f.value) as result')
+        ->getQuery()
+        ->getOneOrNullResult();
+
     }
 
-    public function getCumulDiff($start, $end)
+    public function getByRange($key, $start, $end)
     {
-        return $start;
+        return $this->createQueryBuilder('f')
+        ->where('f.key = :key')
+        ->setParameter('key', $key)
+        ->andWhere('f.createdAt BETWEEN :start AND :end')
+        ->setParameter('start', $start)
+        ->setParameter('end', $end)
+        ->select('SUM(f.value) as result')
+        ->getQuery()
+        ->getOneOrNullResult();
     }
 
-    public function getCountRange($range)
-    {
-        return $range;
-    }
 
-    public function getCountDiff($start, $end)
-    {
-        return $start;
-    }
 }
