@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  Suminagashi\FiguresBundle\:
+    resource: '../../'
+    exclude:
+      - '../../DependencyInjection/'
+      - '../../Kernel.php'
+      - '../../Tests/'
+
+  Suminagashi\FiguresBundle\EventListener\FiguresListener:
+      tags:
+          - { name: 'doctrine.event_subscriber' }
+
