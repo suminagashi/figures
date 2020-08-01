@@ -1,7 +1,6 @@
-<h1 style="text-align:center">Figures</h1>
+#Figures
 
 **Statistics for your symfony app, simply.**
-
 
 ## Install the bundle :
 
@@ -18,40 +17,61 @@ return [
 ];
 ```
 
-### Create the Stats entity :
+### Add the Figure entity to your database :
 
 ```bash
-php bin/console figures:init
+php bin/console doctrine:schema:update --force
 ```
 
 ### Setup your entities :
 
-> Setup coming
+First you need to import `Suminagashi\FiguresBundle\Annotation\Watch` annotation. Then you have to write add the key of your stat, the type (cumul or count) and the lifecycle (at which lifecycle you want the stat to register).
+
+```php
+
+use Suminagashi\FiguresBundle\Annotation\Watch;
+
+class Product
+{
+    //...
+
+    /**
+     *
+     * @ORM\Column(type="integer")
+     *
+     * @Watch(key="product:price", type="cumul", lifecycle="update")
+     * @Watch(key="product:sell", type="count", lifecycle="create")
+     */
+    private $price;
+
+    //***
+
+```
 
 ### How does this works :
 
-There is two mode of stats calculation : cumul & count.
+There is two mode of stats calculation :
+- `count` is for counting the number of sales (e.g).
+- `cumul` is for calculating the amount of sales (e.g).
 
-```Cumul :
+### How to get a specific stats :
 
-order, 150, 2020/08/01 11:00,
-order, 103, 2020/08/01 12:00,
-order, 10, 2020/08/01 13:00,
-order, 20, 2020/08/01 14:00,
-order, 120, 2020/08/01 15:00,
-order, 2420, 2020/08/01 16:00,
-order, 1, 2020/08/01 20:00,
+First you need to import `Suminagashi\FiguresBundle\Tools\Figures` in your code. Then you can autowire the class and start using it. We provide few methods to help you :
 
-= 2804
+```php
+$figures = new Figures();
 
-Count :
+$figures->all('key');
+$figures->getToday('key');
+$figures->getLastweek('key');
+$figures->getLastmonth('key');
+$figures->getLastyear('key');
+$figures->get('key', 'start', 'end');
+```
 
-user, 1, 2020/08/01 11:00,
-user, 1, 2020/08/01 12:00,
-user, 1, 2020/08/01 13:00,
-user, 1, 2020/08/01 14:00,
-user, 1, 2020/08/01 15:00,
-user, 1, 2020/08/01 16:00,
-user, 1, 2020/08/01 20:00,
+### Coming :
 
-= 7```
+- Stat percentages calculations.
+- Statut type
+- Better exception handling
+- Handle delete (cascade)

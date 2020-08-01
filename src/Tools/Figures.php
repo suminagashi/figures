@@ -13,7 +13,7 @@ class Figures
 
   public function get(string $key, \Datetime $start, \Datetime $end)
   {
-    return $this->repo->getByRange($key, $start, $end);
+    return $this->repo->getByRange($key, $start, $end)['result'];
   }
   public function getToday(string $key)
   {
@@ -22,7 +22,7 @@ class Figures
     $end = date('Y-m-d H:i:s');
     $start = date('Y-m-d H:i:s',$today);
 
-    return $this->repo->getByRange($key, $start, $end);
+    return $this->repo->getByRange($key, $start, $end)['result'];
   }
   public function getLastweek(string $key)
   {
@@ -31,7 +31,7 @@ class Figures
     $end = date('Y-m-d H:i:s');
     $start = date('Y-m-d H:i:s',$lastWeek);
 
-    return $this->repo->getByRange($key, $start, $end);
+    return $this->repo->getByRange($key, $start, $end)['result'];
   }
   public function getLastmonth(string $key)
   {
@@ -40,7 +40,7 @@ class Figures
     $end = date('Y-m-d H:i:s');
     $start = date('Y-m-d H:i:s',$lastMonth);
 
-    return $this->repo->getByRange($key, $start, $end);
+    return $this->repo->getByRange($key, $start, $end)['result'];
   }
   public function getLastyear(string $key)
   {
@@ -50,11 +50,11 @@ class Figures
     $end = date('Y-m-d H:i:s');
     $start = date('Y-m-d H:i:s',$lastYear);
 
-    return $this->repo->getByRange($key, $start, $end);
+    return $this->repo->getByRange($key, $start, $end)['result'];
   }
   public function all(string $key)
   {
-    return $this->repo->getAll($key);
+    return $this->repo->getAll($key)['result'];
   }
 
 }
